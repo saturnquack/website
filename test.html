@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Expandable Projects Example</title>
+<style>
+  /* Hide checkboxes */
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  /* Style labels as clickable */
+  label {
+    cursor: pointer;
+    display: block;
+    margin: 5px 0;
+    user-select: none;
+  }
+
+  /* Arrow icons for collapsed/expanded */
+  .arrow::before {
+    content: "▶ ";
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  input[type="checkbox"]:checked + label .arrow::before {
+    content: "▼ ";
+  }
+
+  /* Hide description div by default */
+  .desc {
+    display: none;
+    margin-left: 20px;
+    font-style: italic;
+    color: #555;
+  }
+
+  /* Show description when checkbox is checked */
+  input[type="checkbox"]:checked + label + .desc {
+    display: block;
+  }
+
+  /* Section header style */
+  .section-header {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+
+  /* Indent project labels */
+  .project-label {
+    margin-left: 15px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Section 1 -->
+<input type="checkbox" id="sec1" />
+<label for="sec1" class="section-header">MICROCONTROLLER PROJECTS</label>
+<div id="sec1-content" style="margin-left:10px; display:none;">
+  <input type="checkbox" id="p1" />
+  <label for="p1" class="project-label"><span class="arrow"></span>Project 1</label>
+  <div class="desc">This is the description for project 1.</div>
+
+  <input type="checkbox" id="p2" />
+  <label for="p2" class="project-label"><span class="arrow"></span>Project 2</label>
+  <div class="desc">This is the description for project 2.</div>
+
+  <input type="checkbox" id="p3" />
+  <label for="p3" class="project-label"><span class="arrow"></span>Project 3</label>
+  <div class="desc">This is the description for project 3.</div>
+</div>
+
+<!-- Section 2 -->
+<input type="checkbox" id="sec2" />
+<label for="sec2" class="section-header">PROGRAMMING PROJECTS</label>
+<div id="sec2-content" style="margin-left:10px; display:none;">
+  <input type="checkbox" id="p4" />
+  <label for="p4" class="project-label"><span class="arrow"></span>Project 4</label>
+  <div class="desc">This is the description for project 4.</div>
+
+  <input type="checkbox" id="p5" />
+  <label for="p5" class="project-label"><span class="arrow"></span>Project 5</label>
+  <div class="desc">This is the description for project 5.</div>
+
+  <input type="checkbox" id="p6" />
+  <label for="p6" class="project-label"><span class="arrow"></span>Project 6</label>
+  <div class="desc">This is the description for project 6.</div>
+</div>
+
+<script>
+  // Show/hide section content when section checkbox toggled
+  document.querySelectorAll('input[id^="sec"]').forEach(secCheckbox => {
+    secCheckbox.addEventListener('change', () => {
+      const contentDiv = document.getElementById(secCheckbox.id + "-content");
+      if (secCheckbox.checked) {
+        contentDiv.style.display = "block";
+      } else {
+        contentDiv.style.display = "none";
+        // Also close all inner projects inside that section when collapsing
+        contentDiv.querySelectorAll('input[type="checkbox"]').forEach(innerCb => innerCb.checked = false);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

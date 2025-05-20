@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>dice wizard</title>
+  <style>
+    #dice-stuff {
+      margin-right: 50px;
+      min-width: 150px;
+      border: 3px solid rgb(211, 190, 190);
+      padding-left: 10px;
+    }
+    
+    #log-stuff {
+      margin-right: 50px;
+      min-width: 300px;
+      border: 3px solid lightgrey;
+      padding-left: 10px;
+      padding-bottom: 15px;
+      margin-left: 20px;
+    }
+    
+    
+    #health-stuff {
+      min-width: 200px;
+      border: 3px solid lightgrey;
+      padding-left: 10px;
+      padding-right: 100px;
+      padding-bottom: 32px;
+    }
+    #main-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 10%;
+    }
+    #choice-buttons {
+      margin-top: 10px;
+      min-height: 20px; 
+      width: 400px;
+    }
+    
+     .popup {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .popup:target {
+            display: flex;
+        }
+    
+  </style>
+
+  <script>
+    
+    let playerHealth = 50;
+    let enemyHealth = 50;
+    let dice1 = 0, dice2 = 0, dice3 = 0, dice4 = 0;
+    let runtime = 0;
+    let manaAmount = 20;
+    let manaMax = 20;
+
+    
+    
+    function runtimeCount() {
+      setInterval(() => {
+        runtime++;
+        document.getElementById("runtime").textContent = runtime;
+        document.getElementById("manaAmount").textContent = manaAmount;
+        document.getElementById("manaMax").textContent = manaMax;
+        
+        
+        document.getElementById("mana").value = manaAmount;
+        document.getElementById("mana").max = manaMax;
+
+
+      }, 1000);
+    }
+
+    runtimeCount();
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function waitForPlayerChoice() {
+      return new Promise(resolve => {
+        const buttonsDiv = document.getElementById("choice-buttons");
+        buttonsDiv.innerHTML = ''; // Clear previous buttons if any
+rollButton.disabled = true;
+        const attackBtn = document.createElement("button");
+        attackBtn.textContent = "attack";
+        const rerollBtn = document.createElement("button");
+        rerollBtn.textContent = "re-roll (5)";
+        rerollBtn.disabled = true;
+
+          if (manaAmount > manaMax * 0.1) {
+                    rerollBtn.disabled = false;
+
+        attackBtn.onclick = () => {
+          buttonsDiv.innerHTML = ''; 
+          resolve("attack");
+        };
+        rerollBtn.onclick = () => {
+          buttonsDiv.innerHTML = '';
+          manaAmount = manaAmount - 5;
+          document.getElementById("mana").value = manaAmount;
+          document.getElementById("mana").max = manaMax;
+          document.getElementById("manaAmount").textContent = manaAmount;
+          document.getElementById("manaMax").textContent = manaMax;
+
+          resolve("reroll");
+        }
+        };
+
+
+        buttonsDiv.appendChild(attackBtn);
+        buttonsDiv.appendChild(rerollBtn);
+      });
+    }
+
+    async function handleClick() {
+      let rollCount = 0;
+      let maxRolls = 5;
+      let rollInterval = setInterval(() => {
+        dice1 = Math.floor(Math.random() * 6) + 1;
+        dice2 = Math.floor(Math.random() * 6) + 1;
+        dice3 = Math.floor(Math.random() * 6) + 1;
+        dice4 = Math.floor(Math.random() * 6) + 1;
+
+        document.getElementById("dice1").textContent = dice1;
+        document.getElementById("dice2").textContent = dice2;
+        document.getElementById("dice3").textContent = dice3;
+        document.getElementById("dice4").textContent = dice4;
+
+        
+        
+        rollCount++;
+        if (rollCount >= maxRolls) {
+          clearInterval(rollInterval);
+        }
+      }, 10);
+
+      // Wait for the rolling to finish
+      await sleep(maxRolls * 10 + 50);
+
+      const playerTotal = dice1 + dice2;
+      const enemyTotal = dice3 + dice4;
+
+      document.getElementById("winner").textContent = `Player: ${playerTotal} vs Enemy: ${enemyTotal}`;
+
+      // Wait for player decision
+      const choice = await waitForPlayerChoice();
+
+      if (choice === "reroll") {
+        handleClick(); // restart
+        return;
+      }
+
+      // Do damage
+      if (playerTotal > enemyTotal) {
+        document.getElementById("winner").textContent = "PLAYER WINS";
+        let damage = playerTotal;
+        let damageInterval = setInterval(() => {
+          if (damage > 0) {
+            enemyHealth--;
+            document.getElementById("enemy-health").textContent = enemyHealth;
+            damage--;
+            if (enemyHealth == 0) {
+             
+              clearInterval(damageInterval);
+                        alert("Enemy has been defeated. (Nothing past this point has been added yet)");
+
+            
+            };
+     document.getElementById("damage").textContent = "PLAYER DEALT " + playerTotal + " DAMAGE TO ENEMY";
+          } else {
+            clearInterval(damageInterval);
+            rollButton.disabled = false;
+          }
+        }, 50);
+      } else if (playerTotal < enemyTotal) {
+        document.getElementById("winner").textContent = "ENEMY WINS";
+        let damage = enemyTotal;
+        let damageInterval = setInterval(() => {
+          if (damage > 0) {
+            playerHealth--;
+            document.getElementById("player-health").textContent = playerHealth;
+            damage--;
+             if (playerHealth == 0) {
+             
+              clearInterval(damageInterval);
+                        alert("You have died. (Nothing past this point has been added yet)");
+
+            
+            };
+   document.getElementById("damage").textContent = "ENEMY DEALT " + enemyTotal + " DAMAGE TO PLAYER";
+            rollButton.disabled = false;
+          } else {
+            clearInterval(damageInterval);
+          }
+        }, 50);
+      } else {
+        
+        document.getElementById("winner").textContent = "TIE";
+                    rollButton.disabled = false;
+
+      }
+    }
+  </script>
+  
+</head>
+  
+<body>
+  
+  <h1>dice wizard</h1>
+<a href="#popup" style="padding: 10px 20px; background-color: #ff0000; 
+                            color: #fff; text-decoration: none; border-radius: 5px;">rules/how to play</a>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2>rules/how to play</h2>
+          <p>- you are the player (rolls dice1 and dice2)</p>
+          <p>- you and the enemy roll dice</p>
+          <p>- whoever rolls higher attacks the other with the sum of their rolled dice</p>
+          <p>- you have the ability to re-roll using mana, displayed in the blue bar</p>
+          <p>- be careful, once you run out of mana you lose the ability to re-roll</p>
+          <p>- more to come, expect bugs</p>
+
+            <a href="#" style="display: inline-block; margin-top: 10px; padding:
+                               5px 10px; background-color: #dc3545; color: #fff; text-decoration:
+                               none; border-radius: 3px;">Close</a>
+        </div>
+    </div>  <p>runtime: <span id="runtime">0</span></p>
+<progress id="mana" value=manaAmount max=manaMax>  </progress> 
+      <p>(<span id="manaAmount">foo</span>/<span id="manaMax">foo</span>)</p>
+  <div id="main-container">
+    <div id="dice-stuff">
+      <p>dice1: <span id="dice1">0</span></p>
+      <p>dice2: <span id="dice2">0</span></p>
+      <br>
+      <p>dice3: <span id="dice3">0</span></p>
+      <p>dice4: <span id="dice4">0</span></p>
+    </div>
+    <div id="health-stuff">
+      <p>your health: <span id="player-health">50</span></p>
+      <br><br><br>
+      <p>enemies health: <span id="enemy-health">50</span></p>
+    </div>
+    <div id="log-stuff">
+        <p><span id="winner"></span></p>
+          <p><span id="damage"></span></p>
+      
+    </div>
+  </div>
+
+  <div id="choice-buttons"></div>
+  <button id="rollButton" onclick="handleClick()">roll</button>
+</body>
+</html>
