@@ -173,9 +173,12 @@ a:active {
       padding-top: 15px;
     }
 
+    #bigone {
+      content: 100px
+    }
 .bg {
   /* The image used */
-  background-image: url("media/work_background.png");
+  background-image: url("media/projectsImg.png");
 
   height: 100%; 
 
@@ -200,13 +203,13 @@ a:active {
     </head>
     <body>
         <div class="image-container">
-            <img src="media/work_background.png" alt="image">
+            <img src="media/projectsImg.png" alt="image">
           
    
 
 
 <div class="overlay-text">
-    <h1>Work Experience</h1>
+    <h1>Projects</h1>
     <br>
 <br>
 <br>
@@ -242,13 +245,26 @@ a:active {
         <h1>This Website</h1>
         <small>Project Started: 4/9/2025</small>
       <br>
-        <small>Last Updated: 5/18/2025</small>
+        <small>Last Updated: 5/30/2025</small>
       <br>
        <small>(p1-1)</small>
         <p>The first entry I'm going to put on this list is this website. It is entirely coded by me in HTML. I used to have a Squarespace website that looked very similar, because I am designing this based off that. I had the Squarespace website for 1 year, and started designing this about a month before it expired, as I didn't want to pay for it anymore. I started to learn how to code HTML on Codecademy, with lots of help from Stack Overflow and W3Schools. It didn't take that long for me to move to VSCode for a better workflow. As of writing this, it has already been a very fun journey creating this website. I loved the idea of having a place to show off my ideas and projects, while also having a full portfolio of my online creations.</p>
-
+ <!--hi website!-->
       </div>
-      <img class="right-image" src="media/ABCA7B04-F796-463A-9F59-82CCF665A039_1_105_c.jpeg" alt="image">   
+    <div class="slideshow-container" data-slideshow="1">
+  <div class="slide">
+    <img src="media/slide1.png" alt="img">
+  </div>
+  <div class="slide">
+    <img src="media/slide2.png" alt="img">
+  </div>
+  <div class="slide">
+    <img src="media/slide3.png" alt="img">
+  </div>
+  <a class="prev" onclick="changeSlide(-1, 1)">&#10094;</a>
+  <a class="next" onclick="changeSlide(1, 1)">&#10095;</a>
+</div>
+   
   </div>
 
   <input type="checkbox" id="p1-2" />
@@ -265,11 +281,54 @@ a:active {
       <br>
         <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tristique neque ac accumsan tristique. Praesent convallis odio in lacus sodales imperdiet. Cras mattis turpis accumsan nunc feugiat, id ultricies quam tincidunt. In volutpat enim magna, eu tincidunt nulla vulputate at. Fusce dictum convallis eros eget finibus. Mauris vitae odio non diam tristique imperdiet quis commodo sapien. Aenean elementum ut urna eget molestie. Sed tortor erat, lobortis sed luctus et, posuere eu massa. Phasellus congue orci eros, rutrum rutrum lacus elementum in. Nullam mattis feugiat sapien in tempus. Aenean id nulla imperdiet, efficitur velit auctor, suscipit dui. Pellentesque ut tristique tortor. Sed ultricies dui ex, id aliquet nulla ultrices et. </p>
       </div>
-      <img class="right-image" src="media/ABCA7B04-F796-463A-9F59-82CCF665A039_1_105_c.jpeg" alt="image">   
+    <div class="slideshow-container" data-slideshow="2">
+  <div class="slide">
+    <img src="media/ducks/duck1.png" alt="img">
+  </div>
+  <div class="slide">
+    <img src="media/ducks/duck2.png" alt="img">
+  </div>
+  <div class="slide">
+    <img src="media/ducks/duck3.png" alt="img">
+  </div>
+  <a class="prev" onclick="changeSlide(-1, 2)">&#10094;</a>
+  <a class="next" onclick="changeSlide(1, 2)">&#10095;</a>
+</div>
   </div>
 
   <input type="checkbox" id="p1-3" />
   <label for="p1-3" class="project-label"><span class="arrow"></span>Project 3</label>
+  <div class="desc">This is the description for project 3.</div>
+</div>
+
+
+
+<input type="checkbox" id="sec3" />
+<label for="sec2" class="h1">3D Projects</label>
+<div id="sec2-content" style="margin-left:10px";>
+  <input type="checkbox" id="p3-1" />
+  <label for="p3-1" class="project-label"><span class="arrow"></span>Arleigh Burke</label>
+  <div class="desc">
+    <h1>USS Arleigh Burke Class Destroyer</h1>
+    <div id="bigone">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>  
+<model-viewer
+  alt="glb"
+  src="media/3d/arleigh_burke.glb"
+  poster="shared-assets/models/NeilArmstrong.webp"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+  style="width: 100%; height: 500px;">
+</model-viewer>  </div>
+  </div>
+
+  <input type="checkbox" id="p3-2" />
+  <label for="p3-2" class="project-label"><span class="arrow"></span>Project 2</label>
+  <div class="desc">This is the description for project 2.</div>
+
+  <input type="checkbox" id="p3-3" />
+  <label for="p3-3" class="project-label"><span class="arrow"></span>Project 3</label>
   <div class="desc">This is the description for project 3.</div>
 </div>
 
@@ -302,9 +361,12 @@ a:active {
 
 
 
+
+
+
    </div> <!--CONTENT-->
   <script>
-  // Show/hide section content when section checkbox toggled
+
   document.querySelectorAll('input[id^="sec"]').forEach(secCheckbox => {
     secCheckbox.addEventListener('change', () => {
       const contentDiv = document.getElementById(secCheckbox.id + "-content");
@@ -319,6 +381,40 @@ contentDiv.querySelectorAll('input[type="checkbox"]').forEach(innerCb => {
       }
     });
   });
+
+
+
+const slideIndexes = {}; // Store current index per slideshow
+
+function showSlides(n, slideshowId) {
+  const container = document.querySelector(`.slideshow-container[data-slideshow="${slideshowId}"]`);
+  const slides = container.querySelectorAll(".slide");
+
+  if (!slideIndexes[slideshowId]) slideIndexes[slideshowId] = 0;
+
+  if (n >= slides.length) slideIndexes[slideshowId] = 0;
+  else if (n < 0) slideIndexes[slideshowId] = slides.length - 1;
+  else slideIndexes[slideshowId] = n;
+
+  slides.forEach(slide => slide.style.display = "none");
+  slides[slideIndexes[slideshowId]].style.display = "block";
+}
+
+function changeSlide(n, slideshowId) {
+  const current = slideIndexes[slideshowId] ?? 0;
+  showSlides(current + n, slideshowId);
+}
+
+// Initialize all slideshows on page load
+window.onload = () => {
+  const allSlideshows = document.querySelectorAll(".slideshow-container");
+  allSlideshows.forEach(container => {
+    const id = container.getAttribute("data-slideshow");
+    showSlides(0, id);
+  });
+};
+
+
   </script>
 </body>
 </html>
